@@ -4,6 +4,8 @@
   "private": true,
   "dependencies": {
     "antd": "^3.7.3",
+    "fetch-ponyfill": "^6.0.2",
+    "filesize": "^3.6.1",
     "react": "^16.4.2",
     "react-dom": "^16.4.2",
     "react-redux": "^5.0.7",
