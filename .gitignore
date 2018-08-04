@@ -1,3 +1,6 @@
+public/uploads/*
+build/uploads/*
+
 # Binaries for programs and plugins
 *.exe
 *.exe~
