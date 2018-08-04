@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { Alert, Upload, Spin } from 'antd';
+import { Alert, Upload, Spin, Button, Input } from 'antd';
 import filesize from 'filesize';
 
 import './FilesList.css';
@@ -10,8 +10,8 @@ import {
   requestFiles,
 } from '../redux/files';
 
-const mapStateToProps = ({ files: { files, loading, error } }) => ({
-  files, loading, error,
+const mapStateToProps = ({ files: { files, query, loading, error } }) => ({
+  files, query, loading, error,
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators({
@@ -66,7 +66,25 @@ class FilesList extends Component {
       className: 'upload-list-inline',
     };
     return (
-      <Upload {...props} />
+      <Fragment>
+        <Input.Search
+          placeholder="input and press enter…"
+          defaultValue={this.props.query}
+          onSearch={value => {
+            this.props.requestFiles(value);
+          }}
+          style={{ width: 200 }}
+        />
+        {this.props.query ? (
+          <Button
+            type="primary"
+            onClick={() => { this.props.requestFiles(); }}
+          >
+            Clear
+          </Button>
+        ) : null}
+        <Upload {...props} />
+      </Fragment>
     );
   }
 }
