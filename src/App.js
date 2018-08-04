@@ -1,26 +1,42 @@
 import React, { Component } from 'react';
-import Button from 'antd/lib/button';
+import { Layout, Divider } from 'antd';
+
+import UploadArea from './components/UploadArea';
+import FilesList from './components/FilesList';
+
 import logo from './logo.svg';
 import './App.css';
 
-class App extends Component {
-  render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">
-            docs-upload-site
-          </h1>
-        </header>
-        <div class="App-content">
-          <Button type="primary">
-            Antd Works!
-          </Button>
-        </div>
-      </div>
-    );
-  }
-}
+const { Header, Content, Footer } = Layout;
 
-export default App;
+const STYLE_HEIGHT = { height: '100%' };
+
+const Section = ({ children }) => (
+  <div style={{ marginBottom: '40px' }}>
+    {children}
+  </div>
+);
+
+export default () => (
+  <div style={STYLE_HEIGHT}>
+    <Layout className="App" style={STYLE_HEIGHT}>
+      <Header className="App-header">
+        <h1 className="App-title">
+          Simple File Uploader
+        </h1>
+      </Header>
+      <Content class="App-content">
+        <Section>
+          <UploadArea />
+        </Section>
+        <Divider>
+          Uploaded files
+        </Divider>
+        <Section>
+          <FilesList />
+        </Section>
+      </Content>
+      <Footer class="App-footer" />
+    </Layout>
+  </div>
+);
