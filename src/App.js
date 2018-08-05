@@ -1,18 +1,18 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Layout, Divider } from 'antd';
 
 import UploadArea from './components/UploadArea';
+import SearchBar from './components/SearchBar';
 import FilesList from './components/FilesList';
 
-import logo from './logo.svg';
 import './App.css';
 
 const { Header, Content, Footer } = Layout;
 
 const STYLE_HEIGHT = { height: '100%' };
 
-const Section = ({ children }) => (
-  <div style={{ marginBottom: '40px' }}>
+const Section = ({ margin, children }) => (
+  <div style={{ marginBottom: margin || '50px' }}>
     {children}
   </div>
 );
@@ -25,18 +25,21 @@ export default () => (
           Simple File Uploader
         </h1>
       </Header>
-      <Content class="App-content">
+      <Content className="App-content">
         <Section>
           <UploadArea />
         </Section>
         <Divider>
           Uploaded files
         </Divider>
+        <Section margin="15px">
+          <SearchBar />
+        </Section>
         <Section>
           <FilesList />
         </Section>
       </Content>
-      <Footer class="App-footer" />
+      <Footer className="App-footer" />
     </Layout>
   </div>
 );

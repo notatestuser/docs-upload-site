@@ -12,3 +12,9 @@
 .upload-list-inline .ant-upload-animate-leave {
   animation-name: uploadAnimateInlineOut;
 }
+
+@media (max-width: 767px) {
+  .upload-list-inline .ant-upload-list-item {
+    width: 100% !important;
+  }
+}
