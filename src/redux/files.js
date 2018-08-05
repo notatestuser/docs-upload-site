@@ -1,11 +1,15 @@
 import Fetch from 'fetch-ponyfill';
 import prefixApiPath from '../utils/prefixApiPath';
+
 const { fetch } = Fetch();
 
-// actions
 export const FILES_REQUEST = 'files/FILES_REQUEST'
 export const FILES_SUCCESS = 'files/FILES_SUCCESS'
 export const FILES_ERRORED = 'files/FILES_ERRORED'
+
+export const DELETE_REQUEST = 'files/DELETE_REQUEST'
+export const DELETE_SUCCESS = 'files/DELETE_SUCCESS'
+export const DELETE_ERRORED = 'files/DELETE_ERRORED'
 
 const initialState = {
   query: null,
@@ -38,6 +42,12 @@ export default (state = initialState, action) => {
         error: action.error,
       }
 
+    case DELETE_ERRORED:
+      return {
+        ...state,
+        error: action.error,
+      };
+
     default:
       return state
   }
@@ -59,7 +69,6 @@ export const requestFiles = query => {
       if (res.status < 200 || res.status >= 300) {
         throw new Error(`HTTP status ${res.status}`);
       }
-
       const json = await res.json();
       const { files } = json;
       dispatch({
@@ -71,6 +80,35 @@ export const requestFiles = query => {
         type: FILES_ERRORED,
         error,
       });
+      throw error;
+    }
+  };
+}
+
+export const deleteFile = fileName => {
+  const url = prefixApiPath(`/delete/${fileName}`);
+  return async (dispatch) => {
+    dispatch({
+      type: DELETE_REQUEST,
+      fileName,
+    });
+
+    try {
+      const res = await fetch(url, { method: 'POST' });
+      if (res.status < 200 || res.status >= 300) {
+        throw new Error(`HTTP status ${res.status}`);
+      }
+      dispatch({
+        type: DELETE_SUCCESS,
+        fileName,
+      });
+      dispatch(requestFiles());
+    } catch (error) {
+      dispatch({
+        type: DELETE_ERRORED,
+        error,
+      });
+      throw error;
     }
   };
 }
