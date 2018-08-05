@@ -20,7 +20,7 @@ const mapDispatchToProps = dispatch => bindActionCreators({
   deleteFile,
 }, dispatch);
 
-class FilesList extends Component {
+export class FilesList extends Component {
   static defaultProps = {
     files: [],
   }

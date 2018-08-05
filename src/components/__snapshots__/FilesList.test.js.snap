@@ -1,0 +1,119 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`passes a snapshot test with 2 files 1`] = `
+<span
+  className="upload-list-inline"
+>
+  <div
+    className="ant-upload ant-upload-select ant-upload-select-picture"
+    style={
+      Object {
+        "display": "none",
+      }
+    }
+  >
+    <span
+      className="ant-upload"
+      onClick={[Function]}
+      onDragOver={[Function]}
+      onDrop={[Function]}
+      onKeyDown={[Function]}
+      role="button"
+      style={undefined}
+      tabIndex="0"
+    >
+      <input
+        accept=""
+        directory={null}
+        multiple={false}
+        onChange={[Function]}
+        style={
+          Object {
+            "display": "none",
+          }
+        }
+        type="file"
+        webkitdirectory={null}
+      />
+    </span>
+  </div>
+  <div
+    className="ant-upload-list ant-upload-list-picture"
+    style={undefined}
+  >
+    <div
+      className="ant-upload-list-item ant-upload-list-item-done"
+    >
+      <div
+        className="ant-upload-list-item-info"
+      >
+        <span>
+          <a
+            className="ant-upload-list-item-thumbnail"
+            href="/uploads/file1.jpg"
+            onClick={[Function]}
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            <img
+              alt="file1.jpg (1 B)"
+              src="/uploads/file1.jpg"
+            />
+          </a>
+          <a
+            className="ant-upload-list-item-name"
+            href="/uploads/file1.jpg"
+            onClick={[Function]}
+            rel="noopener noreferrer"
+            target="_blank"
+            title="file1.jpg (1 B)"
+          >
+            file1.jpg (1 B)
+          </a>
+        </span>
+      </div>
+      <i
+        className="anticon anticon-cross"
+        onClick={[Function]}
+        title="Remove file"
+      />
+    </div>
+    <div
+      className="ant-upload-list-item ant-upload-list-item-done"
+    >
+      <div
+        className="ant-upload-list-item-info"
+      >
+        <span>
+          <a
+            className="ant-upload-list-item-thumbnail"
+            href="/uploads/file2.pdf"
+            onClick={[Function]}
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            <i
+              className="anticon anticon-file ant-upload-list-item-icon"
+            />
+          </a>
+          <a
+            className="ant-upload-list-item-name"
+            href="/uploads/file2.pdf"
+            onClick={[Function]}
+            rel="noopener noreferrer"
+            target="_blank"
+            title="file2.pdf (2 B)"
+          >
+            file2.pdf (2 B)
+          </a>
+        </span>
+      </div>
+      <i
+        className="anticon anticon-cross"
+        onClick={[Function]}
+        title="Remove file"
+      />
+    </div>
+  </div>
+</span>
+`;
