@@ -1,5 +1,7 @@
 # docs-upload-site
 
+This is a basic file upload and management web app that uses the filesystem as its database (keeping it simple!)
+
 ## Getting started
 
 ### Start for development
@@ -50,3 +52,6 @@ $ make
 $ make run_docker
 $ open http://localhost:8081
 ```
+
+Right now all uploads will be kept inside the Docker container and may be lost on restart. In the future these would be moved to an external volume to make for more of an ideal setup.
+
