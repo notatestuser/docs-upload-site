@@ -21,6 +21,9 @@ import (
 const maxFileSize = 1024 * 1024 * 10 // 10MB
 const bufferSize = 1024 * 1024 * 1   // 1MB
 
+// security: slashReplacer replaces `/` in uploaded filenames with an empty string.
+var slashReplacer = strings.NewReplacer("/", "")
+
 func main() {
 	// use APP_ENV to decide the current environment for static assets
 	env := os.Getenv("APP_ENV")
@@ -75,7 +78,12 @@ func uploadFile(uploadsDir string) func(w http.ResponseWriter, r *http.Request) 
 			return
 		}
 
-		f, err := os.OpenFile(uploadsDir+handler.Filename, os.O_WRONLY|os.O_CREATE, 0666)
+		// security: a user including slashes probably intends to do something malicious.
+		// from here we will use the sanitised `fname`.
+		fname := handler.Filename
+		fname = slashReplacer.Replace(fname)
+
+		f, err := os.OpenFile(uploadsDir+fname, os.O_WRONLY|os.O_CREATE, 0666)
 		if err != nil {
 			throwHTTPError(w, http.StatusInternalServerError, err)
 			return
@@ -87,7 +95,7 @@ func uploadFile(uploadsDir string) func(w http.ResponseWriter, r *http.Request) 
 		resp := struct {
 			FileName string `json:"filename"`
 		}{
-			FileName: handler.Filename,
+			FileName: fname,
 		}
 
 		output, err := json.Marshal(resp)
