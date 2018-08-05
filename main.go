@@ -34,14 +34,18 @@ func main() {
 	r.HandleFunc("/upload", uploadFile(uploadsDir)).Methods("POST", "OPTIONS")
 	r.HandleFunc("/list", listOrSearchFiles(uploadsDir)).Methods("GET")
 	r.HandleFunc("/search/{query}", listOrSearchFiles(uploadsDir)).Methods("GET")
+	r.HandleFunc("/delete/{filename}", deleteFile(uploadsDir)).Methods("POST", "OPTIONS")
 	r.PathPrefix("/").Handler(http.FileServer(http.Dir("./build/")))
 
 	fmt.Println("Starting up on 8081")
 
+	// cors config
 	origins := handlers.AllowedOrigins([]string{"*"})
 	headers := handlers.AllowedHeaders([]string{"X-Requested-With"})
 	methods := handlers.AllowedMethods([]string{"GET", "HEAD", "POST", "PUT", "OPTIONS"})
-	log.Fatal(http.ListenAndServe(":8081", handlers.CORS(origins, headers, methods)(r)))
+
+	err := http.ListenAndServe(":8081", handlers.CORS(origins, headers, methods)(r))
+	log.Fatal(err)
 }
 
 func throwHTTPError(w http.ResponseWriter, status int, err error) {
@@ -143,5 +147,30 @@ func listOrSearchFiles(uploadsDir string) func(w http.ResponseWriter, r *http.Re
 			return
 		}
 		w.Write(output)
+	}
+}
+
+// deleteFile deletes a file on the server.
+func deleteFile(uploadsDir string) func(w http.ResponseWriter, r *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		vars := mux.Vars(r)
+
+		filename := ""
+		if len(vars) > 0 {
+			filename = vars["filename"]
+		}
+
+		if len(filename) == 0 {
+			http.Error(w, "unknown filename", http.StatusInternalServerError)
+			return
+		}
+
+		err := os.Remove(uploadsDir + filename)
+		if err != nil {
+			throwHTTPError(w, http.StatusNotFound, err)
+			return
+		}
+
+		w.Write(nil)
 	}
 }
