@@ -2,7 +2,9 @@
 
 ## Getting started
 
-Please ensure that you have `GOPATH` configured correctly:
+### Start for development
+
+Please first ensure that you have `GOPATH` configured correctly:
 
 ```bash
 $ mkdir -p $HOME/go/src/github.com/notatestuser
@@ -19,15 +21,32 @@ $ yarn
 $ dep ensure
 ```
 
-## Start for development
+Then use `make dev` to run the dev server in one tab:
 
 ```bash
-$ yarn start
+$ make dev
 ```
 
-## Start in production
+And run the backend server in another tab:
 
 ```bash
-$ yarn build
+$ make run_server
+```
+
+The app will be available at `http://localhost:3000`.
+
+### Start in production
+
+```bash
+$ make build_app
 $ APP_ENV=production go run main.go
+$ open http://localhost:8081
+```
+
+### Docker in production
+
+```bash
+$ make
+$ make run_docker
+$ open http://localhost:8081
 ```

@@ -19,6 +19,9 @@ build/uploads/*
 /vendor
 /node_modules
 
+# go cache
+/.cache
+
 # testing
 /coverage
 
