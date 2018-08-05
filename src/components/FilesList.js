@@ -1,13 +1,14 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { Alert, Upload, Spin, Button, Input } from 'antd';
+import { Alert, Upload, Spin, Modal, message } from 'antd';
 import filesize from 'filesize';
 
 import './FilesList.css';
 
 import {
   requestFiles,
+  deleteFile,
 } from '../redux/files';
 
 const mapStateToProps = ({ files: { files, query, loading, error } }) => ({
@@ -16,6 +17,7 @@ const mapStateToProps = ({ files: { files, query, loading, error } }) => ({
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   requestFiles,
+  deleteFile,
 }, dispatch);
 
 class FilesList extends Component {
@@ -46,8 +48,8 @@ class FilesList extends Component {
     if (!files.length) {
       return (
         <Alert
-          message="No files available"
-          description="There are no files uploaded."
+          message="No files to show"
+          description="Nothing matched the given search."
           type="info"
           showIcon
         />
@@ -55,6 +57,7 @@ class FilesList extends Component {
     }
     const fileList = files.map(({ name, size }, idx) => ({
       uid: idx,
+      actualName: name,
       name: `${name} (${filesize(size)})`,
       status: 'done',
       url: `/uploads/${name}`,
@@ -64,28 +67,25 @@ class FilesList extends Component {
       listType: 'picture',
       defaultFileList: [...fileList],
       className: 'upload-list-inline',
+      onRemove: async ({ actualName }) =>
+        new Promise((resolve, reject) => {
+          Modal.confirm({
+            title: `Do you want to remove "${actualName}"?`,
+            content: 'This action cannot be reversed.',
+            onOk: async () => {
+              try {
+                await this.props.deleteFile(actualName);
+                message.info(`"${actualName}" was removed.`);
+                resolve();
+              } catch (e) {
+                message.error(`Removing "${actualName}" has failed.`);
+                reject();
+              }
+            },
+          });
+        }),
     };
-    return (
-      <Fragment>
-        <Input.Search
-          placeholder="input and press enter…"
-          defaultValue={this.props.query}
-          onSearch={value => {
-            this.props.requestFiles(value);
-          }}
-          style={{ width: 200 }}
-        />
-        {this.props.query ? (
-          <Button
-            type="primary"
-            onClick={() => { this.props.requestFiles(); }}
-          >
-            Clear
-          </Button>
-        ) : null}
-        <Upload {...props} />
-      </Fragment>
-    );
+    return <Upload {...props} />;
   }
 }
 
