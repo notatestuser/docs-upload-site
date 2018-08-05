@@ -18,7 +18,8 @@ import (
 	"github.com/gorilla/mux"
 )
 
-const maxUploadSize = 1024 * 1024 * 2 // 2MB
+const maxFileSize = 1024 * 1024 * 10 // 10MB
+const bufferSize = 1024 * 1024 * 1   // 1MB
 
 func main() {
 	// use APP_ENV to decide the current environment for static assets
@@ -52,8 +53,15 @@ func throwHTTPError(w http.ResponseWriter, status int, err error) {
 // uploadFile produces an HTTP handler for uploading a file to the server.
 func uploadFile(uploadsDir string) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		// parse request body as multipart/form-data
-		r.ParseMultipartForm(maxUploadSize) // max upload size 2MB
+		// reject suspiciously large file uploads
+		if r.ContentLength > maxFileSize {
+			http.Error(w, "request too large", http.StatusExpectationFailed)
+			return
+		}
+
+		// parse request body as multipart/form-data with maxFileSize in mind
+		r.Body = http.MaxBytesReader(w, r.Body, maxFileSize)
+		r.ParseMultipartForm(bufferSize)
 
 		file, handler, err := r.FormFile("file") //retrieve the file from form data
 		defer file.Close()                       //close the file when we finish

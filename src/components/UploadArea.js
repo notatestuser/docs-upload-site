@@ -27,7 +27,7 @@ const props = requestFiles => ({
       message.success(`${info.file.name} file uploaded successfully.`);
       requestFiles();
     } else if (status === 'error') {
-      message.error(`${info.file.name} file upload failed.`);
+      message.error(`Upload of "${info.file.name}" has failed. Max size is 10MB.`);
     }
   },
 });
