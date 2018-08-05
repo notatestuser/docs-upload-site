@@ -55,3 +55,7 @@ $ open http://localhost:8081
 
 Right now all uploads will be kept inside the Docker container and may be lost on restart. In the future these would be moved to an external volume to make for more of an ideal setup.
 
+## Security
+
+One basic constraint is that uploaded files must be no larger than 10MB. There is no restriction on file types allowed for now.
+
