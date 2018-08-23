@@ -68,7 +68,12 @@ func uploadFile(uploadsDir string) func(w http.ResponseWriter, r *http.Request) 
 
 		// parse request body as multipart/form-data with maxFileSize in mind
 		r.Body = http.MaxBytesReader(w, r.Body, maxFileSize)
-		r.ParseMultipartForm(bufferSize)
+
+		err := r.ParseMultipartForm(bufferSize)
+		if err != nil {
+			throwHTTPError(w, http.StatusInternalServerError, err)
+			return
+		}
 
 		file, handler, err := r.FormFile("file") //retrieve the file from form data
 		defer file.Close()                       //close the file when we finish
@@ -84,13 +89,17 @@ func uploadFile(uploadsDir string) func(w http.ResponseWriter, r *http.Request) 
 		fname = slashReplacer.Replace(fname)
 
 		f, err := os.OpenFile(uploadsDir+fname, os.O_WRONLY|os.O_CREATE, 0666)
+		defer f.Close()
 		if err != nil {
 			throwHTTPError(w, http.StatusInternalServerError, err)
 			return
 		}
 
-		defer f.Close()
-		io.Copy(f, file)
+		_, err = io.Copy(f, file)
+		if err != nil {
+			throwHTTPError(w, http.StatusInternalServerError, err)
+			return
+		}
 
 		resp := struct {
 			FileName string `json:"filename"`
